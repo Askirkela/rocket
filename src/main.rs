@@ -1,12 +1,16 @@
 #![feature(plugin)]
 #![plugin(rocket_codegen)]
 
+mod functions;
+
 extern crate rocket;
 extern crate rocket_contrib;
 #[macro_use]
 extern crate serde_derive;
 
 use rocket_contrib::Json;
+use functions::game;
+use functions::get_user;
 
 //  Structs
 
@@ -82,17 +86,6 @@ fn main() {
         .mount("/g", routes![get_game, add_move_to_game])
         .launch();
 }
-
-//  Functions
-
-fn get_user(name: &String) -> Json<User> {
-    Json(User::new(&name, 1, 1200))
-}
-
-fn game(gameid: String) -> Json<Game> {
-    Json(Game::new(gameid))
-}
-
 
 /*
 #[post("/addGame", format = "application/json", data = "<game>")]
