@@ -11,50 +11,9 @@ extern crate serde_derive;
 use rocket_contrib::Json;
 use functions::game;
 use functions::get_user;
-
-//  Structs
-
-#[derive(Default, Debug, Serialize, Deserialize)]
-struct Move {
-    x1: u16,
-    y1: u16,
-    x2: u16,
-    y2: u16,
-    chessman: String
-}
-
-#[derive(Default, Debug, Serialize, Deserialize)]
-struct Game {
-    id: String,
-    moves: Vec<Move>
-}
-impl Game {
-    fn new(ident: String) -> Game {
-        Game {
-            id: ident,
-            moves: Vec::new()
-        }
-    }
-    fn add_move(&mut self, m: Move) {
-        self.moves.push(m);
-    }
-}
-
-#[derive(Default, Debug, Serialize, Deserialize)]
-struct User {
-    rank: u64,
-    points: u64,
-    name: String
-}
-impl User {
-    fn new(n: &String, r: u64, p: u64) -> User {
-        User {
-            name: n.to_ascii_lowercase(),
-            rank: r,
-            points: p
-        }
-    }
-}
+use functions::User;
+use functions::Move;
+use functions::Game;
 
 //  Access-points
 #[get("/")]
@@ -79,6 +38,7 @@ fn add_move_to_game(gameid: String, chessmove: Json<Move>) -> Json<Game> {
     Json(g)
 }
 
+//Configuration
 fn main() {
     rocket::ignite()
         .mount("/", routes![index])
@@ -86,10 +46,3 @@ fn main() {
         .mount("/g", routes![get_game, add_move_to_game])
         .launch();
 }
-
-/*
-#[post("/addGame", format = "application/json", data = "<game>")]
-fn addGame(game: Json<Game>) {
-
-}*/
-
